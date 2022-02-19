@@ -6,7 +6,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,22 +14,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Trade {
+public class Portfolio {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@ApiModelProperty(hidden = true)
 	private int id;
 	
 	@Column
 	private String symbol;
 	
 	@Column
-	private double price;
+	private double averagePrice;
 	
 	@Column
 	private int quantity;
-	
-	@Column
-	@ApiModelProperty(example = "BUY/SELL")
-	private String type;
 }

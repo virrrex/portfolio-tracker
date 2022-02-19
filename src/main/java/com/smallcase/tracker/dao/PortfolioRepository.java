@@ -6,11 +6,13 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.smallcase.tracker.model.Trade;
+import com.smallcase.tracker.model.Portfolio;
+
 
 @Repository
 @Transactional
-public interface TradeRepository extends CrudRepository<Trade, Integer> {
-	List<Trade> findAll();
-	Trade findById(int id);
+public interface PortfolioRepository extends CrudRepository<Portfolio, Integer> {
+	List<Portfolio> findAll();
+	Portfolio findById(int id);
+	Portfolio findBySymbol(String symbol);
 }

@@ -2,12 +2,12 @@ package com.smallcase.tracker.service;
 
 import java.util.List;
 
-import com.smallcase.tracker.model.Stock;
+import com.smallcase.tracker.model.Trade;
 
-public interface StockService {
-	public Stock addTrade(Stock newStock);
+public interface TradeService {
+	public Trade addTrade(Trade newTrade);
 	public void removeTrade(int id);
-	public Stock updateTrade(Stock updatedStock);
-	public Stock findTradeBySymbol(String symbol);
-	public List<Stock> findAllTrade();
+	public Trade updateTrade(Trade updatedTrade, int id);
+	public Trade findTradeById(int id);
+	public List<Trade> findAllTrade();
 }
