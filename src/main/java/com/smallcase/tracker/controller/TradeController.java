@@ -49,7 +49,7 @@ public class TradeController {
 	@ApiOperation(value = "Adds new trade",
 	notes = "Provide trade attribute to add new trade in the portfolio",
 	response = Trade.class)
-	public ResponseEntity<Trade> addTrade(@ApiParam(value = "Trade attributes to be added as new trade.", required = true) 
+	public ResponseEntity addTrade(@ApiParam(value = "Trade attributes to be added as new trade.", required = true) 
 	@RequestBody Trade toBeAdded){
 		try {
 			Trade created = service.addTrade(toBeAdded);
@@ -58,7 +58,7 @@ public class TradeController {
 			return new ResponseEntity<Trade>(created, headers, HttpStatus.CREATED);
 		}
 		catch(IllegalArgumentException e){
-			return new ResponseEntity<Trade>(HttpStatus.BAD_REQUEST);
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 		}
 	}
 	
