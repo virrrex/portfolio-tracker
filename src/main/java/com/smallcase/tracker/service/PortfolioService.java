@@ -9,4 +9,5 @@ public interface PortfolioService {
 	public List<Portfolio> findPortfolio();
 	public Portfolio findPortfolioById(int id);
 	public Portfolio findPortfolioBySymbol(String symbol);
+	public void removePortfolio(int id);
 }

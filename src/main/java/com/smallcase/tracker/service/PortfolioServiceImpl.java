@@ -34,4 +34,9 @@ public class PortfolioServiceImpl implements PortfolioService {
 		return repo.findBySymbol(symbol);
 	}
 
+	@Override
+	public void removePortfolio(int id) {
+		repo.deleteById(id);
+	}
+
 }
