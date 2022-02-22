@@ -14,7 +14,8 @@
 	<name>Portfolio Tracker</name>
 	<description>Stock Portfolio Tracking API for smallcase assignment</description>
 	<properties>
-		<java.version>10</java.version>
+	 <maven.compiler.source>1.8</maven.compiler.source>
+	 <maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
 	<dependencies>
 		<dependency>
