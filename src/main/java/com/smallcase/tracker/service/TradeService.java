@@ -10,4 +10,5 @@ public interface TradeService {
 	public Trade updateTrade(Trade updatedTrade, int id);
 	public Trade findTradeById(int id);
 	public List<Trade> findAllTrade();
+	public double getReturns();
 }

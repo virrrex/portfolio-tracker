@@ -47,7 +47,7 @@ public class TradeController {
 	
 	@PostMapping("/trades")
 	@ApiOperation(value = "Adds new trade",
-	notes = "Provide trade attribute to add new trade in the portfolio",
+	notes = "Provide trade attributes to add new trade in the portfolio",
 	response = Trade.class)
 	public ResponseEntity addTrade(@ApiParam(value = "Trade attributes to be added as new trade.", required = true) 
 	@RequestBody Trade toBeAdded){
@@ -78,22 +78,28 @@ public class TradeController {
 	}
 	
 	@GetMapping("/portfolio")
+	@ApiOperation(value = "Finds all the shares in portfolio",
+	notes = "Finds all the shares present in the portfolio",
+	response = Trade.class)
 	public ResponseEntity<List<Portfolio>> getPortfolio() {
 		List<Portfolio> portfolio = portfolioService.findPortfolio();
 		return new ResponseEntity<List<Portfolio>>(portfolio, HttpStatus.OK);
 	}
 	
 	@GetMapping("/returns")
-	public ResponseEntity<Integer> getReturns(){
-		int returnValue = 0;
-		return new ResponseEntity<Integer>(returnValue, HttpStatus.OK);
+	@ApiOperation(value = "Finds returns from the portfolio",
+	notes = "Finds the returns generated from the portfolio as per the current market price.",
+	response = Trade.class)
+	public ResponseEntity<Double> getReturns(){
+		double returnValue = service.getReturns();
+		return new ResponseEntity<Double>(returnValue, HttpStatus.OK);
 	}
 	
 	@PutMapping("/trades/{id}")
 	@ApiOperation(value = "Updates trade by id",
 	notes = "Provide an id and trade attributes to update existing trade",
 	response = Trade.class)
-	public ResponseEntity<Trade> updateTrade(@ApiParam(value = "ID value and trade attributes for the existing trade you need to update", required = true)
+	public ResponseEntity updateTrade(@ApiParam(value = "ID value and trade attributes for the existing trade you need to update", required = true)
 										@RequestBody Trade toBeAdded, @PathVariable("id") int id){
 		try {
 			HttpHeaders headers =  new HttpHeaders();
@@ -102,7 +108,7 @@ public class TradeController {
 			return new ResponseEntity<Trade>(added, headers, HttpStatus.ACCEPTED);
 		}
 		catch(IllegalArgumentException e) {
-			return new ResponseEntity<Trade>(HttpStatus.BAD_REQUEST);
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 		}
 	}
 }

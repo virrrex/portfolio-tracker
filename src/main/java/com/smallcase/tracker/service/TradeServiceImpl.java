@@ -52,7 +52,10 @@ public class TradeServiceImpl implements TradeService {
 			averagePrice = (testPortfolio.getAveragePrice() * currentQuantity + newTrade.getPrice() * tradeQuantity) / testPortfolio.getQuantity();
 		}
 		testPortfolio.setAveragePrice(averagePrice);
-		portfolioService.updatePortfolio(testPortfolio);
+		if(testPortfolio.getQuantity() == 0)
+			portfolioService.removePortfolio(testPortfolio.getId());
+		else
+			portfolioService.updatePortfolio(testPortfolio);
 		
 		return repo.save(newTrade);
 	}
@@ -69,6 +72,39 @@ public class TradeServiceImpl implements TradeService {
 
 	@Override
 	public void removeTrade(int id) {
+		Trade currentTrade = findTradeById(id);
+		if(currentTrade == null) {
+			throw new IllegalArgumentException(Constants.NOT_EXIST);
+		}
+		Portfolio testPortfolio = portfolioService.findPortfolioBySymbol(currentTrade.getSymbol());
+		if(currentTrade.getType().equalsIgnoreCase(Constants.BUY) && testPortfolio == null) {
+			throw new IllegalArgumentException(Constants.PORTFOLIO_NOT_EXIST);
+		}
+		
+		int portfolioQuantity = (testPortfolio != null ? testPortfolio.getQuantity(): 0);
+		int removeQuantity = currentTrade.getQuantity();
+		
+		if(currentTrade.getType().equalsIgnoreCase(Constants.BUY)) {
+			if(portfolioQuantity == removeQuantity)
+				portfolioService.removePortfolio(testPortfolio.getId());
+			else if(portfolioQuantity > removeQuantity) {
+				testPortfolio.setQuantity(portfolioQuantity - removeQuantity);
+				portfolioService.updatePortfolio(testPortfolio);
+			} else {
+				throw new IllegalArgumentException(Constants.NEGATIVE_QUANTITY);
+			}
+		} else {
+			testPortfolio.setQuantity(portfolioQuantity + removeQuantity);
+			if(testPortfolio == null) {
+				testPortfolio.setAveragePrice(currentTrade.getPrice());
+				testPortfolio.setSymbol(currentTrade.getSymbol());
+			}
+			else {
+				double averagePrice = (testPortfolio.getAveragePrice() * portfolioQuantity + currentTrade.getPrice() * removeQuantity) / testPortfolio.getQuantity();
+				testPortfolio.setAveragePrice(averagePrice);
+			}
+		}
+		
 		repo.deleteById(id);
 	}
 
@@ -90,14 +126,8 @@ public class TradeServiceImpl implements TradeService {
 			throw new IllegalArgumentException(Constants.SYMBOL_NOT_SAME);
 		}
 		
-		Portfolio testPortfolio = portfolioService.findPortfolioBySymbol(currentTrade.getSymbol());
-		int portfolioQuantity = 0;
-		int updateQuantity = updatedTrade.getQuantity();
-		int currentQuantity = currentTrade.getQuantity();
-		
 		removeTrade(currentTrade.getId());
-		
-		return null;
+		return addTrade(updatedTrade);
 	}
 
 	@Override
@@ -108,6 +138,16 @@ public class TradeServiceImpl implements TradeService {
 	@Override
 	public List<Trade> findAllTrade() {
 		return repo.findAll();
+	}
+
+	@Override
+	public double getReturns() {
+		List<Portfolio> portfolioList = portfolioService.findPortfolio();
+		double returns = 0.0;
+		for(Portfolio p: portfolioList) {
+			returns += (Constants.CURRENT_PRICE - p.getAveragePrice()) * p.getQuantity();
+		}
+		return returns;
 	}
 
 }
