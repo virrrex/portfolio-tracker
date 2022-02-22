@@ -14,8 +14,8 @@ https://tracking-portfolio.herokuapp.com/swagger-ui.html
 
 ### Pre Requisite
 
-Java
-Maven
+- Java
+- Maven
 
 
 ### How to Run
